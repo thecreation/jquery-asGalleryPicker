@@ -1,0 +1,27 @@
+{
+  "name": "asGalleryPicker",
+  "asGalleryPicker": "AsGalleryPicker",
+  "description": "A jQuery plugin.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/amazingSurge/jquery-asGalleryPicker",
+  "author": {
+    "name": "amazingSurge",
+    "email": "amazingSurge@yahoo.com",
+    "url": "amazingSurge.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/amazingSurge/jquery-asGalleryPicker.git"
+  },
+  "bugs": "https://github.com/amazingSurge/jquery-asGalleryPicker/issues",
+  "licenses": [
+    {
+      "type": "GPL",
+      "url": "https://github.com/amazingSurge/jquery-asGalleryPicker/blob/master/LICENSE-GPL"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
