@@ -151,11 +151,11 @@ module.exports = function(grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'clean', 'copy', 'concat', 'uglify', 'recess']);
+    grunt.registerTask('default', ['jshint', 'clean', 'copy', 'dist', 'css']);
     grunt.registerTask('dist', ['concat', 'uglify']);
     grunt.registerTask('css', ['recess']);
-    grunt.registerTask('copyfiles', ['copy']);
     grunt.registerTask('js', ['jshint', 'jsbeautifier']);
+
     // grunt.registerTask('version', [
     //     'replace:bower',
     //     'replace:jquery'

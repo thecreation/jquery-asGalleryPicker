@@ -1,11 +1,10 @@
  /*
- * asFontEditor
+ * asGalleryPicker
  * https://github.com/amazingSurge/jquery-asGalleryPicker
  *
  * Copyright (c) 2014 amazingSurge
  * Licensed under the GPL license.
  */
-
 
 (function($, document, window, undefined) {
 
@@ -62,9 +61,13 @@
 
                 this.$wrap.addClass(this.classes.present);
 
-                this._getValue();
+                var value = this.$element.val();
+                this.value = this.options.parse(value);
+                this.count = this.value.length;
 
-                this._val(this.value, true);
+                if(this.count > 0) {
+                    this._setImages(this.value);
+                }
 
                 this._bindEvent();
 
@@ -80,7 +83,7 @@
                         return;
                     }
 
-                    self._trigger('add');
+                    self.options.add.call(self);
                     return false;
                 });
 
@@ -90,7 +93,7 @@
                         return;
                     }
 
-                    self._trigger('add');
+                    self.options.add.call(self);
                     return false;
                 });
 
@@ -133,7 +136,7 @@
                         return;
                     }
 
-                    self._trigger('add');
+                    self.options.add.call(self);
                     return false;
                 })
 
@@ -143,7 +146,7 @@
                         return;
                     }
 
-                    this.delete($(e.currentTarget).parent().index());
+                    this.remove($(e.currentTarget).parent().index());
                     return false;
                 }, this));
 
@@ -168,8 +171,7 @@
                         return;
                     }
 
-                    this.changeIndex = $(e.currentTarget).parent().index();
-                    this._trigger('change');
+                    this.options.change.call(self, $(e.currentTarget).parent().index());
                     return false;
                 }, this));
             },
@@ -207,30 +209,48 @@
                     self.options[onFunction].apply(self, method_arguments);
                 }
             },
-            _getValue: function() {
-                var value = this.$element.val();
-                this.value = this.options.parse(value);
-                this.images_arry = this.options.getImages.call(this, this.value) || [];
-                if (this.value){
-                    this.count = this.images_arry.length;
-                } else {
-                    this.count = 0;
-                }
-            },
             _submit: function() {
                 $(this.$count).text(this.count);
                 this._setState();
-                this.$element.val(this.options.process(this.images_arry));
+                this.$element.val(this.options.process(this.value));
             },
 
             _setState: function() {
                 if (this.count > 0) {
-                    this.$image.attr("src", this.images_arry[this.count - 1]);
+                    this.$image.attr("src", this._getImageByIndex(this.count - 1));
                     this.$wrap.removeClass(this.classes.empty).addClass(this.classes.hasImages);
                 }else {
                     this.$image.attr("src", '');
                     this.$wrap.removeClass(this.classes.hasImages).addClass(this.classes.empty);
                 }
+            },
+            _getImageByIndex: function(index) {
+                if(index < this.value.length){
+                    var item = this.value[index];
+                    return this.options.getImage(item);
+                }
+                return null;
+            },
+            _setImages: function(value) {
+                this._clearImages();
+
+                for (var i = 0, item; i < value.length; i++) {
+                    item = value[i];
+                    this._addImage(item);
+                }
+            },
+
+            _addImage: function(item){
+                $('<li/>', {
+                    html:   '<img class="' + this.namespace +'-item-image" src="'+ this.options.getImage(item) +'"/>' +
+                            '<div class="' + this.namespace + '-extend-actions">Change</div>' +
+                            '<a class="' + this.namespace + '-extend-remove" href=""></a>',
+                    'class':  this.namespace + '-item'
+                }).insertBefore(this.$extendInitial);
+            },
+
+            _clearImages: function() {
+                this.$gallery.children('.' + this.namespace +'-item').remove();
             }
         });
 
@@ -242,59 +262,48 @@
         constructor: Plugin,
         components: {},
 
-        _val: function(value, update) {
-            if (typeof value === 'undefined') {
-                return this.value;
-            }
+        add: function(item) {
+            this.value.push(item);
+            this.count = this.value.length;
 
-            if (value) {
-                this._set(value, update);
+            this._addImage(item);
+            this._submit();
+
+            this._trigger('change');
+        },
+
+        set: function(value) {
+            if($.isArray(value)){
+                this.value = value;
             } else {
-                this.clear(update);
+                this.value = [];
             }
+            this.count = this.value.length;
+
+            this._setImages(this.value);
+            this._submit();
+
+            this._trigger('change');
         },
 
-        _set: function(value) {
-            for (var i = 0, item; item = value[i]; i++) {
-                $('<li/>', {
-                    html:   '<img class="' + this.namespace +'-item-image" src="'+ item +'"/>' +
-                            '<div class="' + this.namespace + '-extend-actions">Change</div>' +
-                            '<a class="' + this.namespace + '-extend-remove" href=""></a>',
-                    class:  this.namespace + '-item'
-                }).insertBefore(this.$extendInitial);
-            };
-
+        change: function(index, value) {
+            this.value[index] = value;
+            this.$gallery.children().eq(index).find('img').attr('src', this.options.getImage(value));
             this._submit();
         },
 
-        add: function(value) {
-            for (var i in value) {
-                this.images_arry.push(value[i]);
-            }
-
-            this.count = this.images_arry.length;
-            this._set(value);
-        },
-
-        change: function(value) {
-            this.images_arry[this.changeIndex] = value;
-            this.$gallery.children().eq(this.changeIndex).find('img').attr('src', value);
-            this._submit();
-        },
-
-        delete: function(index) {
-            this.images_arry.splice(index, 1);
+        remove: function(index) {
+            this.value.splice(index, 1);
             this.count -= 1;
             this.$gallery.children().eq(index).remove();
             this._submit();
         },
 
         clear: function() {
-            for(var i = 0; i < this.count; i++) {
-                this.$gallery.children().eq(0).remove();
-            }
+            this._clearImages();
+
             this.count = 0;
-            this.images_arry = [];
+            this.value = [];
             this._submit();
         },
 
@@ -351,21 +360,19 @@
 
         parse: function(value) {
             if (value) {
-                var arry = new Array();
-                arry = value.split(",");
-                return arry;
+                var array = [];
+                array = value.split(",");
+                return array;
             } else {
                 return null;
             }
         },
-        getImages: function(value) {
+        getImage: function(value) {
             return value;
         },
-
-        onAdd: function() {},
-        onChange: function() {},
-        onSelect: function() {},
-        onUpdate: function() {}
+        change: function(index){},
+        add: function() {},
+        onChange: function() {}
     };
 
     Plugin.registerComponent = function(component, methods) {
@@ -379,7 +386,7 @@
 
             if (/^\_/.test(method)) {
                 return false;
-            } else if ((/^(getTabs)$/.test(method)) || (method === 'val' && method_arguments === undefined)) {
+            } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments === undefined)) {
                 var api = this.first().data(pluginName);
                 if (api && typeof api[method] === 'function') {
                     return api[method].apply(api, method_arguments);
