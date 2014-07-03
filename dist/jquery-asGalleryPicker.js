@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.0 - 2014-07-03
+/*! jQuery plugin - v0.1.0 - 2014-07-04
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -12,12 +12,6 @@
 
         this.element = element;
         this.$element = $(element);
-
-        if (this.$element.attr('name')) {
-            this.name = this.$element.attr('name');
-        }else {
-            this.name = options.name;
-        }
 
         this.options = $.extend({}, Plugin.defaults, options, this.$element.data(), metas);
         this.namespace = this.options.namespace;
@@ -58,7 +52,12 @@
 
                 var value = this.$element.val();
                 this.value = this.options.parse(value);
-                this.count = this.value.length;
+
+                if(this.value){
+                    this.count = this.value.length;
+                } else {
+                    this.count = 0;
+                }
 
                 if(this.count > 0) {
                     this._setImages(this.value);
@@ -257,6 +256,14 @@
         constructor: Plugin,
         components: {},
 
+        val: function(value){
+            if (typeof value === 'undefined') {
+                 return this.options.process(this.value);
+             }
+
+             this.set(this.options.parse(value));
+        },
+
         add: function(item) {
             this.value.push(item);
             this.count = this.value.length;
@@ -322,7 +329,6 @@
         skin: null,
         lang: "en",
         disabled: false,
-        name: null,
 
         tpl: function() {
             return '<div class="' + this.namespace + '">' +
@@ -354,7 +360,7 @@
         },
 
         parse: function(value) {
-            if (value) {
+            if (typeof value === 'string') {
                 var array = [];
                 array = value.split(",");
                 return array;

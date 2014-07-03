@@ -41,7 +41,9 @@
                         <input type="text" class="b-asGalleryPicker"  value=''/>
 
                         <input type="text" class="a-asGalleryPicker"  value='images/grass.jpg,images/minv.jpg,images/mh370.jpg,images/sun.jpg'/>
-                        <button value="clear" id="clear">clear</button>
+                        <button id="clear">clear</button>
+                        <button id="get_val">get val</button>
+                        <button id="set_val">set val</button>
                     </form>
                 </div>
             </section>
@@ -58,34 +60,43 @@
                 $('#toc').toc();
             })();
             var api = $('.b-asGalleryPicker').asGalleryPicker({
-                onAdd: function(){
+                add: function(){
                     var value = ["images/dog.jpg"];
-                    this.add(value);
+                    this.set(value);
                 },
-                onChange: function() {
+                change: function(index) {
                     var value = "images/sun.jpg";
-                    this.change(value);
+                    this.change(index, value);
                 }
             });
 
             $('.a-asGalleryPicker').asGalleryPicker({
-                onAdd: function(){
+                add: function(){
                     var value = ["images/sun.jpg","images/minv.jpg","images/mh370.jpg"];
-                    this.add(value);
+                    this.set(value);
                 },
-                onChange: function() {
+                change: function(index) {
                     var value = "images/sun.jpg";
-                    this.change(value);
+                    this.change(index, value);
                 }
-                // onSelect: function(){
-                //     this.addSingle("images/dog.jpg");
-                // }
+            });
+
+            $('#get_val').on('click', function(e) {
+                e.preventDefault();
+                console.info($('.a-asGalleryPicker').asGalleryPicker('val'));
+                return false;
             });
 
             $('#clear').on('click', function() {
-                $('.a-asGalleryPicker').asGalleryPicker('clear')
+                $('.a-asGalleryPicker').asGalleryPicker('clear');
                 return false;
-            })
+            });
+            
+            $('#set_val').on('click', function(e) {
+                e.preventDefault();
+                $('.a-asGalleryPicker').asGalleryPicker('val', "images/minv.jpg,images/mh370.jpg");
+                return false;
+            });
         });
     </script>
 </body>
