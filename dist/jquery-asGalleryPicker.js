@@ -203,10 +203,12 @@
                     self.options[onFunction].apply(self, method_arguments);
                 }
             },
-            _submit: function() {
+
+            _update: function() {
                 $(this.$count).text(this.count);
                 this._setState();
                 this.$element.val(this.options.process(this.value));
+                this._trigger('change', this.val());
             },
 
             _setState: function() {
@@ -261,7 +263,13 @@
                  return this.options.process(this.value);
              }
 
-             this.set(this.options.parse(value));
+            var value_obj = this.options.parse(value);
+
+            if(value_obj){
+                this.set(value_obj);
+            } else {
+                this.clear();
+            }
         },
 
         add: function(item) {
@@ -269,36 +277,36 @@
             this.count = this.value.length;
 
             this._addImage(item);
-            this._submit();
+            this._update();
 
             this._trigger('change');
         },
 
-        set: function(value) {
+        set: function(value, update) {
             if($.isArray(value)){
                 this.value = value;
             } else {
                 this.value = [];
             }
             this.count = this.value.length;
-
             this._setImages(this.value);
-            this._submit();
 
-            this._trigger('change');
+            if (update !== false) {
+                this._update();
+            }
         },
 
         change: function(index, value) {
             this.value[index] = value;
             this.$gallery.children().eq(index).find('img').attr('src', this.options.getImage(value));
-            this._submit();
+            this._update();
         },
 
         remove: function(index) {
             this.value.splice(index, 1);
             this.count -= 1;
             this.$gallery.children().eq(index).remove();
-            this._submit();
+            this._update();
         },
 
         clear: function() {
@@ -306,17 +314,19 @@
 
             this.count = 0;
             this.value = [];
-            this._submit();
+            this._update();
         },
 
         enable: function() {
             this.disabled = false;
             this.$wrap.removeClass(this.classes.disabled);
         },
+
         disable: function() {
             this.disabled = true;
             this.$wrap.addClass(this.classes.disabled);
         },
+
         destory: function() {
             this.$element.data(pluginName, null);
             this.$wrap.remove();
