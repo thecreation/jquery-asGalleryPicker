@@ -67,13 +67,7 @@ module.exports = function(grunt) {
                     jshintrc: 'src/.jshintrc'
                 },
                 src: ['src/**/*.js']
-            },
-            test: {
-                options: {
-                    jshintrc: 'test/.jshintrc'
-                },
-                src: ['test/**/*.js']
-            },
+            }
         },
         // -- watch Config ---------------------------------------------------------
         watch: {
@@ -84,11 +78,7 @@ module.exports = function(grunt) {
             src: {
                 files: '<%= jshint.src.src %>',
                 tasks: ['jshint:src', 'qunit']
-            },
-            test: {
-                files: '<%= jshint.test.src %>',
-                tasks: ['jshint:test', 'qunit']
-            },
+            }
         },
         // -- jsbeautifier Config --------------------------------------------------
         jsbeautifier: {
@@ -111,24 +101,24 @@ module.exports = function(grunt) {
             },
         },
         // -- replace Config --------------------------------------------------------
-        // replace: {
-        //     bower: {
-        //         src: ['bower.json'],
-        //         overwrite: true, // overwrite matched source files
-        //         replacements: [{
-        //             from: /("version": ")([0-9\.]+)(")/g,
-        //             to: "$1<%= pkg.version %>$3"
-        //         }]
-        //     },
-        //     jquery: {
-        //         src: ['asFontEditor.jquery.json'],
-        //         overwrite: true, // overwrite matched source files
-        //         replacements: [{
-        //             from: /("version": ")([0-9\.]+)(")/g,
-        //             to: "$1<%= pkg.version %>$3"
-        //         }]
-        //     },
-        // },
+        replace: {
+            bower: {
+                src: ['bower.json'],
+                overwrite: true, // overwrite matched source files
+                replacements: [{
+                    from: /("version": ")([0-9\.]+)(")/g,
+                    to: "$1<%= pkg.version %>$3"
+                }]
+            },
+            jquery: {
+                src: ['asGalleryPicker.jquery.json'],
+                overwrite: true, // overwrite matched source files
+                replacements: [{
+                    from: /("version": ")([0-9\.]+)(")/g,
+                    to: "$1<%= pkg.version %>$3"
+                }]
+            },
+        },
         // -- recess config -------------------------------------------------------
         recess: {
             dist: {
@@ -156,9 +146,9 @@ module.exports = function(grunt) {
     grunt.registerTask('css', ['recess']);
     grunt.registerTask('js', ['jshint', 'jsbeautifier']);
 
-    // grunt.registerTask('version', [
-    //     'replace:bower',
-    //     'replace:jquery'
-    // ]);
+    grunt.registerTask('version', [
+        'replace:bower',
+        'replace:jquery'
+    ]);
 
 };

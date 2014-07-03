@@ -212,7 +212,7 @@
             _update: function() {
                 $(this.$count).text(this.count);
                 this._setState();
-                this.$element.val(this.options.process(this.value));
+                this.$element.val(this.val());
                 this._trigger('change', this.val());
             },
 
@@ -266,7 +266,7 @@
         val: function(value){
             if (typeof value === 'undefined') {
                  return this.options.process(this.value);
-             }
+            }
 
             var value_obj = this.options.parse(value);
 
