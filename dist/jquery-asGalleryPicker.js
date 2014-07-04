@@ -25,11 +25,9 @@
             disabled: this.namespace + '_disabled',
             active: this.namespace + '_active',
             empty: this.namespace + '_empty',
-            present: this.namespace + '_present',
-            extend: this.namespace + '_extend',
-            hover: this.namespace + '_hover',
-            // single: this.namespace + '_singleImage',
-            hasImages: this.namespace + '_hasImages'
+            exist: this.namespace + '_exist',
+            expand: this.namespace + '_expand',
+            hover: this.namespace + '_hover'
         };
 
         // flag
@@ -48,7 +46,7 @@
                     this.$wrap.addClass(this.classes.skin);
                 }
 
-                this.$wrap.addClass(this.classes.present);
+                this.$wrap.addClass(this.classes.exist).addClass(this.classes.empty);
 
                 var value = this.$element.val();
                 this.value = this.options.parse(value);
@@ -81,8 +79,8 @@
                     return false;
                 });
 
-                // actions
-                this.$actions.on('click', function() {
+                // add
+                this.$infoAdd.on('click', function() {
                     if (self.disabled) {
                         return;
                     }
@@ -91,61 +89,64 @@
                     return false;
                 });
 
-                // unfold
-                this.$unfold.on('click', function() {
+                // info expand
+                this.$infoExpand.on('click', function() {
                     if (self.disabled) {
                         return;
                     }
 
-                    self.$wrap.addClass(self.classes.extend).removeClass(self.classes.present);
+                    self.$wrap.addClass(self.classes.expand).removeClass(self.classes.exist);
+                    self._scrollbar();
                 })
 
-                // wrap
-                this.$display.on('mouseenter', function() {
+                // info
+                this.$info.on('mouseenter', function() {
                     if (self.disabled) {
                         return;
                     }
 
-                    self.$display.addClass(self.classes.hover);
+                    self.$info.addClass(self.classes.hover);
                 }).on('mouseleave', function() {
                     if (self.disabled) {
                         return;
                     }
 
-                    self.$display.removeClass(self.classes.hover);
+                    self.$info.removeClass(self.classes.hover);
                 });
 
-                // close 
-                this.$close.on("click", function() {
+                // expand close 
+                this.$expandClose.on("click", function() {
                     if (self.disabled) {
                         return;
                     }
-                    self.$wrap.removeClass(self.classes.extend).addClass(self.classes.present);
+                    self.$wrap.removeClass(self.classes.expand).addClass(self.classes.exist);
                     return false;
                 });
 
-                // extend add
-                this.$extendInitial.on("click", function() {
+                // expand add
+                this.$expandAdd.on("click", function() {
                     if (self.disabled) {
                         return;
                     }
 
                     self.options.add.call(self);
+                    self._scrollbar();
                     return false;
                 })
 
                 // remove
-                this.$extend.on("click", '.' + this.namespace + '-extend-remove', $.proxy(function(e) {
+                this.$expand.on("click", '.' + this.namespace + '-item-remove', $.proxy(function(e) {
                     if (this.disabled) {
                         return;
                     }
 
                     this.remove($(e.currentTarget).parent().index());
+                    this._scrollbar();
                     return false;
                 }, this));
 
-                // extend actions
-                this.$extend.on("mouseenter", '.' + this.namespace + '-item', $.proxy(function(e) {
+                // item overlay
+                this.$expand.on("mouseenter", '.' + this.namespace + '-item', $.proxy(function(e) {
                     if (this.disabled) {
                         return;
                     }
@@ -160,7 +161,7 @@
                 }, this));
 
                 // change
-                this.$extend.on("click", '.' + this.namespace + '-extend-actions', $.proxy(function(e) {
+                this.$expand.on("click", '.' + this.namespace + '-item-change', $.proxy(function(e) {
                     if (this.disabled) {
                         return;
                     }
@@ -170,22 +171,21 @@
                 }, this));
             },
             _createHtml: function() {
-                this.$wrap = $(this.options.tpl());
+                this.$wrap = $(this.options.tpl().replace(/\{\{namespace\}\}/g, this.namespace));
                 this.$element.after(this.$wrap);
 
-                this.$display = $('.' + this.namespace + '-display', this.$wrap);
-
-                this.$extend = $('.' + this.namespace + '-extend', this.$wrap);
-
                 this.$initial = $('.' + this.namespace + '-initial', this.$wrap);
-                this.$count = $('.' + this.namespace + '-count', this.$wrap);
-                this.$unfold = $('.' + this.namespace + '-unfold', this.$wrap);
-                this.$actions = $('.' + this.namespace + '-actions', this.$wrap);
-                this.$image = $('.' + this.namespace + '-image', this.$wrap);
+                this.$info = $('.' + this.namespace + '-info', this.$wrap);
+                this.$expand = $('.' + this.namespace + '-expand', this.$wrap);
 
-                this.$close = $('.' + this.namespace + '-close', this.$extend);
-                this.$gallery = $('.' + this.namespace + '-gallery', this.$extend);
-                this.$extendInitial = $('.' + this.namespace + '-item-initial', this.$extend)
+                this.$infoCount = $('.' + this.namespace + '-info-count', this.$wrap);
+                this.$infoExpand = $('.' + this.namespace + '-info-expand', this.$wrap);
+                this.$infoAdd = $('.' + this.namespace + '-info-add', this.$wrap);
+                this.$infoImage = $('.' + this.namespace + '-info-image', this.$wrap);
+
+                this.$expandClose = $('.' + this.namespace + '-expand-close', this.$expand);
+                this.$expandAdd = $('.' + this.namespace + '-expand-add', this.$expand);
+                this.$expandItems = $('.' + this.namespace + '-expand-items', this.$expand);
             },
 
             _trigger: function(eventType) {
@@ -205,7 +205,7 @@
             },
 
             _update: function() {
-                $(this.$count).text(this.count);
+                $(this.$infoCount).text(this.count);
                 this._setState();
                 this.$element.val(this.val());
                 this._trigger('change', this.val());
@@ -213,11 +213,11 @@
 
             _setState: function() {
                 if (this.count > 0) {
-                    this.$image.attr("src", this._getImageByIndex(this.count - 1));
-                    this.$wrap.removeClass(this.classes.empty).addClass(this.classes.hasImages);
+                    this.$infoImage.attr("src", this._getImageByIndex(this.count - 1));
+                    this.$wrap.removeClass(this.classes.empty);
                 }else {
-                    this.$image.attr("src", '');
-                    this.$wrap.removeClass(this.classes.hasImages).addClass(this.classes.empty);
+                    this.$infoImage.attr("src", '');
+                    this.$wrap.addClass(this.classes.empty);
                 }
             },
             _getImageByIndex: function(index) {
@@ -234,19 +234,31 @@
                     item = value[i];
                     this._addImage(item);
                 }
+                this._update();
             },
 
             _addImage: function(item){
                 $('<li/>', {
-                    html:   '<img class="' + this.namespace +'-item-image" src="'+ this.options.getImage(item) +'"/>' +
-                            '<div class="' + this.namespace + '-extend-actions">Change</div>' +
-                            '<a class="' + this.namespace + '-extend-remove" href=""></a>',
+                    html:   '<img src="'+ this.options.getImage(item) +'"/>' +
+                            '<div class="' + this.namespace + '-item-change">Change</div>' +
+                            '<a class="' + this.namespace + '-item-remove" href=""></a>',
                     'class':  this.namespace + '-item'
-                }).insertBefore(this.$extendInitial);
+                }).appendTo(this.$expandItems);
+            },
+
+            _scrollbar: function() {
+                var height = this.$expand.height();
+                if (height > this.options.viewportHeight) {
+                    this.$expand.height(this.options.viewportHeight);
+                    this.$expand.asScrollbar({
+                        contentClass: self.namespace + '-expand-content',
+                        wrapperClass: self.namespace + '-expand-wrapper',
+                    });
+                }
             },
 
             _clearImages: function() {
-                this.$gallery.children('.' + this.namespace +'-item').remove();
+                this.$expandItems.children('.' + this.namespace +'-item').remove();
             }
         });
 
@@ -283,29 +295,37 @@
         },
 
         set: function(value, update) {
-            if($.isArray(value)){
-                this.value = value;
+            if (update !== false) {
+                if($.isArray(value)){
+                    this.value = value;
+                } else {
+                    this.value = [];
+                }
             } else {
-                this.value = [];
+                if($.isArray(value)){
+                    var newString = value.join(','),
+                        defaultString = this.value ? (this.value.length > 0 ? this.value.join(',') + ',' : '') : '',
+                        lastString = defaultString + newString;
+                    this.value = lastString.split(',');
+                } else {
+                    this.value = [];
+                }
             }
+
             this.count = this.value.length;
             this._setImages(this.value);
-
-            if (update !== false) {
-                this._update();
-            }
         },
 
         change: function(index, value) {
             this.value[index] = value;
-            this.$gallery.children().eq(index).find('img').attr('src', this.options.getImage(value));
+            this.$expandItems.children().eq(index).find('img').attr('src', this.options.getImage(value));
             this._update();
         },
 
         remove: function(index) {
             this.value.splice(index, 1);
             this.count -= 1;
-            this.$gallery.children().eq(index).remove();
+            this.$expandItems.children().eq(index).remove();
             this._update();
         },
 
@@ -338,25 +358,26 @@
         namespace: pluginName,
         skin: null,
         lang: "en",
+        viewportHeight: '330',
         disabled: false,
 
         tpl: function() {
-            return '<div class="' + this.namespace + '">' +
-                        '<div class="' + this.namespace + '-display">' + 
-                            '<div class="' + this.namespace + '-initial"><i></i>Drag a image or click here to upload</div>' +
-                            '<div class="' + this.namespace + '-info">' +
-                                '<img class="' + this.namespace + '-image" src="">' +
-                                '<span class="' + this.namespace + '-count">more</span>' + 
-                                '<div class="' + this.namespace + '-actions">Add image</div>' +
-                                '<div class="' + this.namespace + '-unfold">extend</div>' +
+            return  '<div class="{{namespace}}">' +
+                        '<div class="{{namespace}}-initial">' +
+                            '<i></i>Drag a image or click here to upload' +
+                        '</div>' +
+                        '<div class="{{namespace}}-info">' +
+                            '<img class="{{namespace}}-info-image" src="">' +
+                            '<span class="{{namespace}}-info-count">more</span>' +
+                            '<div class="{{namespace}}-info-add">Add image</div>' +
+                            '<div class="{{namespace}}-info-expand">expand</div>' +
+                        '</div>' +
+                        '<div class="{{namespace}}-expand">' + 
+                            '<a class="{{namespace}}-expand-close" href="#"></a>' +
+                            '<div class="{{namespace}}-expand-add">' +
+                            '<i></i>Add image' +
                             '</div>' +
-                        '</div>' + 
-                        '<div class="' + this.namespace + '-extend">' + 
-                            '<a class="' + this.namespace + '-close" href="#"></a>' + 
-                            '<ul class="' + this.namespace + '-gallery">' +  
-                                '<li class="' + this.namespace + '-item-initial">' +
-                                    '<div class="' + this.namespace + '-extend-initial"><i></i>Add image</div>' +
-                                '</li>' +
+                            '<ul class="{{namespace}}-expand-items">' +
                             '</ul>' +
                         '</div>' +
                     '</div>';
@@ -370,7 +391,7 @@
         },
 
         parse: function(value) {
-            if (typeof value === 'string') {
+            if (typeof value === 'string' && value.length !== 0) {
                 var array = [];
                 array = value.split(",");
                 return array;

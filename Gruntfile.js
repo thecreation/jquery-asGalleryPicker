@@ -14,20 +14,11 @@ module.exports = function(grunt) {
         },
         // -- copy config ----------------------------------------------------------
         copy: {
-            jquery_dropdown: {
+            jquery_asScrollbar: {
                 files: [{
                     expand: true,
                     flatten: true,
-                    cwd: 'bower_components/jquery-dropdown/',
-                    src: ['dist/*.js'],
-                    dest: 'demo/js/'
-                }]
-            },
-            jquery_range: {
-                files: [{
-                    expand: true,
-                    flatten: true,
-                    cwd: 'bower_components/jquery-range/',
+                    cwd: 'bower_components/jquery-asScrollbar/',
                     src: ['dist/*.js'],
                     dest: 'demo/js/'
                 }]

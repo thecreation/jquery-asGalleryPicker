@@ -53,6 +53,7 @@
     <script src="js/vendor/jquery-1.9.1.min.js"></script>
     <script src="js/vendor/jquery.toc.min.js"></script>
     <script src="js/vendor/prism.js"></script>
+    <script src="js/jquery-asScrollbar.js"></script>
     <script src="../src/jquery-asGalleryPicker.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -73,7 +74,7 @@
             $('.a-asGalleryPicker').asGalleryPicker({
                 add: function(){
                     var value = ["images/sun.jpg","images/minv.jpg","images/mh370.jpg"];
-                    this.set(value);
+                    this.set(value, false);
                 },
                 change: function(index) {
                     var value = "images/sun.jpg";
