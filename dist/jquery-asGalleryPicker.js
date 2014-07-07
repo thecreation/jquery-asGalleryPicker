@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.1 - 2014-07-04
+/*! jQuery plugin - v0.1.1 - 2014-07-07
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -253,6 +253,8 @@
                     this.$expand.asScrollbar({
                         contentClass: self.namespace + '-expand-content',
                         wrapperClass: self.namespace + '-expand-wrapper',
+                        barClass: self.namespace + '-expand-scrollbar',
+                        handleClass: self.namespace + '-expand-handle'
                     });
                 }
             },

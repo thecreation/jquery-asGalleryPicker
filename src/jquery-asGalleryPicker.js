@@ -258,6 +258,8 @@
                     this.$expand.asScrollbar({
                         contentClass: self.namespace + '-expand-content',
                         wrapperClass: self.namespace + '-expand-wrapper',
+                        barClass: self.namespace + '-expand-scrollbar',
+                        handleClass: self.namespace + '-expand-handle'
                     });
                 }
             },
