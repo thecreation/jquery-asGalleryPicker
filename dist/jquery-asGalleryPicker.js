@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.1 - 2014-07-07
+/*! jQuery plugin - v0.1.1 - 2014-07-23
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -14,6 +14,15 @@
         this.$element = $(element);
 
         this.options = $.extend({}, Plugin.defaults, options, this.$element.data(), metas);
+
+        // load lang strings
+        if (typeof Plugin.Strings[this.options.lang] === 'undefined') {
+            this.lang = 'en';
+        } else {
+            this.lang = this.options.lang;
+        }
+        this.strings = $.extend({}, Plugin.Strings[this.lang], this.options.strings);
+
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
 
@@ -38,6 +47,9 @@
         $.extend(self, {
             init: function() {
                 this._createHtml();
+
+                this.$expand.height(this.options.viewportSize);
+
                 if (this.options.disabled) {
                     this.disable();
                 }
@@ -45,8 +57,6 @@
                 if (this.options.skin) {
                     this.$wrap.addClass(this.classes.skin);
                 }
-
-                this.$wrap.addClass(this.classes.exist).addClass(this.classes.empty);
 
                 var value = this.$element.val();
                 this.value = this.options.parse(value);
@@ -59,7 +69,11 @@
 
                 if(this.count > 0) {
                     this._setImages(this.value);
+                }else {
+                    this.$wrap.addClass(this.classes.empty);
                 }
+
+                this.$wrap.addClass(this.classes.exist);
 
                 this._bindEvent();
 
@@ -96,7 +110,6 @@
                     }
 
                     self.$wrap.addClass(self.classes.expand).removeClass(self.classes.exist);
-                    self._scrollbar();
                 })
 
                 // info
@@ -115,7 +128,7 @@
                 });
 
                 // expand close 
-                this.$expandClose.on("click", function() {
+                this.$expand.on('click', '.' + this.namespace + '-expand-close', function() {
                     if (self.disabled) {
                         return;
                     }
@@ -124,13 +137,12 @@
                 });
 
                 // expand add
-                this.$expandAdd.on("click", function() {
+                this.$expand.on('click', '.' + this.namespace + '-expand-add', function() {
                     if (self.disabled) {
                         return;
                     }
 
                     self.options.add.call(self);
-                    self._scrollbar();
                     return false;
                 })
 
@@ -141,7 +153,7 @@
                     }
 
                     this.remove($(e.currentTarget).parent().index());
-                    this._scrollbar();
+                    this._updateScrollbar();
                     return false;
                 }, this));
 
@@ -171,7 +183,11 @@
                 }, this));
             },
             _createHtml: function() {
-                this.$wrap = $(this.options.tpl().replace(/\{\{namespace\}\}/g, this.namespace));
+                this.$wrap = $(this.options.tpl().replace(/\{\{namespace\}\}/g, this.namespace)
+                                                    .replace(/\{\{strings.placeholder\}\}/g, this.strings.placeholder)
+                                                    .replace(/\{\{strings.add\}\}/g, this.strings.add)
+                                                    .replace(/\{\{strings.count\}\}/g, this.strings.count)
+                                                    .replace(/\{\{strings.expand\}\}/g, this.strings.expand));
                 this.$element.after(this.$wrap);
 
                 this.$initial = $('.' + this.namespace + '-initial', this.$wrap);
@@ -183,8 +199,6 @@
                 this.$infoAdd = $('.' + this.namespace + '-info-add', this.$wrap);
                 this.$infoImage = $('.' + this.namespace + '-info-image', this.$wrap);
 
-                this.$expandClose = $('.' + this.namespace + '-expand-close', this.$expand);
-                this.$expandAdd = $('.' + this.namespace + '-expand-add', this.$expand);
                 this.$expandItems = $('.' + this.namespace + '-expand-items', this.$expand);
             },
 
@@ -228,38 +242,48 @@
                 return null;
             },
             _setImages: function(value) {
+                var self = this;
+                if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
+                    this.$expand.asScrollbar('destory');
+                }
                 this._clearImages();
 
                 for (var i = 0, item; i < value.length; i++) {
                     item = value[i];
                     this._addImage(item);
                 }
+
+                this.$expand.asScrollbar({
+                    contentClass: self.namespace + '-expand-content',
+                    wrapperClass: self.namespace + '-expand-wrapper',
+                    barClass: self.namespace + '-expand-scrollbar',
+                    handleClass: self.namespace + '-expand-handle'
+                });
+                this.$expandContent = $('.' + this.namespace + '-expand-content', this.$expand);
+
                 this._update();
             },
 
             _addImage: function(item){
                 $('<li/>', {
                     html:   '<img src="'+ this.options.getImage(item) +'"/>' +
-                            '<div class="' + this.namespace + '-item-change">Change</div>' +
+                            '<div class="' + this.namespace + '-item-change">' + this.strings.change +'</div>' +
                             '<a class="' + this.namespace + '-item-remove" href=""></a>',
                     'class':  this.namespace + '-item'
                 }).appendTo(this.$expandItems);
             },
 
-            _scrollbar: function() {
-                var height = this.$expand.height();
-                if (height > this.options.viewportHeight) {
-                    this.$expand.height(this.options.viewportHeight);
-                    this.$expand.asScrollbar({
-                        contentClass: self.namespace + '-expand-content',
-                        wrapperClass: self.namespace + '-expand-wrapper',
-                        barClass: self.namespace + '-expand-scrollbar',
-                        handleClass: self.namespace + '-expand-handle'
-                    });
+            _updateScrollbar: function() {
+                if (this.$expandContent.height() < this.options.viewportSize) {
+                    if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
+                        this.$expand.asScrollbar('destory');
+                        this.$expandItems = $('.' + this.namespace + '-expand-items', this.$expand);
+                    }
                 }
             },
 
             _clearImages: function() {
+                this.$expandItems = $('.' + this.namespace + '-expand-items', this.$expand);
                 this.$expandItems.children('.' + this.namespace +'-item').remove();
             }
         });
@@ -316,6 +340,7 @@
 
             this.count = this.value.length;
             this._setImages(this.value);
+            this._updateScrollbar();
         },
 
         change: function(index, value) {
@@ -360,24 +385,24 @@
         namespace: pluginName,
         skin: null,
         lang: "en",
-        viewportHeight: '330',
+        viewportSize: '330',
         disabled: false,
 
         tpl: function() {
             return  '<div class="{{namespace}}">' +
                         '<div class="{{namespace}}-initial">' +
-                            '<i></i>Drag a image or click here to upload' +
+                            '<i></i>{{strings.placeholder}}' +
                         '</div>' +
                         '<div class="{{namespace}}-info">' +
                             '<img class="{{namespace}}-info-image" src="">' +
-                            '<span class="{{namespace}}-info-count">more</span>' +
-                            '<div class="{{namespace}}-info-add">Add image</div>' +
-                            '<div class="{{namespace}}-info-expand">expand</div>' +
+                            '<span class="{{namespace}}-info-count">{{strings.count}}</span>' +
+                            '<div class="{{namespace}}-info-add">{{strings.add}}</div>' +
+                            '<div class="{{namespace}}-info-expand">{{strings.expand}}</div>' +
                         '</div>' +
                         '<div class="{{namespace}}-expand">' + 
                             '<a class="{{namespace}}-expand-close" href="#"></a>' +
                             '<div class="{{namespace}}-expand-add">' +
-                            '<i></i>Add image' +
+                            '<i></i>{{strings.add}}' +
                             '</div>' +
                             '<ul class="{{namespace}}-expand-items">' +
                             '</ul>' +
@@ -408,6 +433,20 @@
         add: function() {},
         onChange: function() {}
     };
+
+    Plugin.Strings = {};
+
+    Plugin.localize = function(lang, label) {
+        Plugin.Strings[lang] = label;
+    };
+
+    Plugin.localize('en', {
+        placeholder: 'Click to upload',
+        count: 'zero',
+        add: 'Add image',
+        expand: 'expand',
+        change: 'change'
+    });
 
     Plugin.registerComponent = function(component, methods) {
         Plugin.prototype.components[component] = methods;

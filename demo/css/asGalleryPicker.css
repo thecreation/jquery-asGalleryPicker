@@ -311,8 +311,8 @@
 }
 
 .asGalleryPicker-expand {
-  position: static !important;
-  max-width: 318px;
+  position: relative;
+  width: 318px;
   padding: 15px 0;
   overflow: hidden;
   background-color: #f4f6f7;
@@ -323,8 +323,8 @@
 
 .asGalleryPicker-expand-close {
   position: absolute;
-  top: -9px;
-  right: -9px;
+  top: 0;
+  right: 0;
   z-index: 9;
   width: 15px;
   height: 15px;
@@ -486,7 +486,7 @@
   -webkit-font-smoothing: antialiased;
   font-style: normal;
   font-weight: normal;
-  line-height: 1;
+  line-height: 16px;
   color: #fff;
   text-align: center;
   text-decoration: none;
