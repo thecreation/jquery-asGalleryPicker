@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.1 - 2014-07-23
+/*! jQuery plugin - v0.1.1 - 2014-07-25
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
