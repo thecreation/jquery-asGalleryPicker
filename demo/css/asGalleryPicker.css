@@ -428,12 +428,12 @@
           box-sizing: border-box;
 }
 
-.asGalleryPicker-expand-scrollbar.vertical {
+.asGalleryPicker-expand-scrollbar.asGalleryPicker-expand-vertical {
   width: 8px;
   height: 100%;
 }
 
-.asGalleryPicker-expand-scrollbar.vertical .asGalleryPicker-expand-handle {
+.asGalleryPicker-expand-scrollbar.asGalleryPicker-expand-vertical .asGalleryPicker-expand-handle {
   width: 100%;
 }
 

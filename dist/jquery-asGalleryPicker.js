@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.1 - 2014-07-25
+/*! jQuery plugin - v0.1.1 - 2014-08-06
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -58,20 +58,9 @@
                     this.$wrap.addClass(this.classes.skin);
                 }
 
-                var value = this.$element.val();
-                this.value = this.options.parse(value);
+                var value = this.options.parse(this.$element.val());
 
-                if(this.value){
-                    this.count = this.value.length;
-                } else {
-                    this.count = 0;
-                }
-
-                if(this.count > 0) {
-                    this._setImages(this.value);
-                }else {
-                    this.$wrap.addClass(this.classes.empty);
-                }
+                this.set(value, false);
 
                 this.$wrap.addClass(this.classes.exist);
 
@@ -110,7 +99,8 @@
                     }
 
                     self.$wrap.addClass(self.classes.expand).removeClass(self.classes.exist);
-                })
+                    self._updateScrollbar();
+                });
 
                 // info
                 this.$info.on('mouseenter', function() {
@@ -144,7 +134,7 @@
 
                     self.options.add.call(self);
                     return false;
-                })
+                });
 
                 // remove
                 this.$expand.on("click", '.' + this.namespace + '-item-remove', $.proxy(function(e) {
@@ -219,13 +209,12 @@
             },
 
             _update: function() {
-                $(this.$infoCount).text(this.count);
-                this._setState();
                 this.$element.val(this.val());
                 this._trigger('change', this.val());
             },
 
             _setState: function() {
+                $(this.$infoCount).text(this.count);
                 if (this.count > 0) {
                     this.$infoImage.attr("src", this._getImageByIndex(this.count - 1));
                     this.$wrap.removeClass(this.classes.empty);
@@ -242,26 +231,10 @@
                 return null;
             },
             _setImages: function(value) {
-                var self = this;
-                if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
-                    this.$expand.asScrollbar('destory');
-                }
-                this._clearImages();
-
                 for (var i = 0, item; i < value.length; i++) {
                     item = value[i];
                     this._addImage(item);
                 }
-
-                this.$expand.asScrollbar({
-                    contentClass: self.namespace + '-expand-content',
-                    wrapperClass: self.namespace + '-expand-wrapper',
-                    barClass: self.namespace + '-expand-scrollbar',
-                    handleClass: self.namespace + '-expand-handle'
-                });
-                this.$expandContent = $('.' + this.namespace + '-expand-content', this.$expand);
-
-                this._update();
             },
 
             _addImage: function(item){
@@ -270,21 +243,21 @@
                             '<div class="' + this.namespace + '-item-change">' + this.strings.change +'</div>' +
                             '<a class="' + this.namespace + '-item-remove" href=""></a>',
                     'class':  this.namespace + '-item'
-                }).appendTo(this.$expandItems);
+                }).appendTo(this.$expand.find('.' + this.namespace + '-expand-items'));
             },
 
             _updateScrollbar: function() {
-                if (this.$expandContent.height() < this.options.viewportSize) {
-                    if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
-                        this.$expand.asScrollbar('destory');
-                        this.$expandItems = $('.' + this.namespace + '-expand-items', this.$expand);
-                    }
+                var self = this;
+                if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
+                    this.$expand.asScrollbar('destory');
                 }
+                this.$expand.asScrollbar({
+                    namespace: self.namespace + '-expand'
+                });
             },
 
             _clearImages: function() {
-                this.$expandItems = $('.' + this.namespace + '-expand-items', this.$expand);
-                this.$expandItems.children('.' + this.namespace +'-item').remove();
+                this.$expand.find('.' + this.namespace + '-item').remove();
             }
         });
 
@@ -310,18 +283,12 @@
             }
         },
 
-        add: function(item) {
-            this.value.push(item);
-            this.count = this.value.length;
-
-            this._addImage(item);
-            this._update();
-
-            this._trigger('change');
-        },
-
         set: function(value, update) {
+            this.update = false;
             if (update !== false) {
+                this.update = true;
+                this._clearImages();
+
                 if($.isArray(value)){
                     this.value = value;
                 } else {
@@ -339,29 +306,53 @@
             }
 
             this.count = this.value.length;
-            this._setImages(this.value);
+            this._setState();
+
+            if (this.count > 0) {
+                this._setImages(value);
+            }
+
             this._updateScrollbar();
+
+            if (update !== false) {
+                this._update();
+            }
         },
 
         change: function(index, value) {
             this.value[index] = value;
-            this.$expandItems.children().eq(index).find('img').attr('src', this.options.getImage(value));
-            this._update();
+            this.$expand.find('.' + this.namespace + '-expand-items').children().eq(index).find('img').attr('src', this.options.getImage(value));
+            this._setState();
+
+            if (this.update) {
+                this._update();
+            }
         },
 
         remove: function(index) {
             this.value.splice(index, 1);
             this.count -= 1;
-            this.$expandItems.children().eq(index).remove();
-            this._update();
+            this.$expand.find('.' + this.namespace + '-expand-items').children().eq(index).remove();
+            this._setState();
+
+            if (this.update) {
+                this._update();
+            }
         },
 
-        clear: function() {
+        clear: function(update) {
             this._clearImages();
 
             this.count = 0;
             this.value = [];
-            this._update();
+            
+            if (update !== false) {
+                this._update();
+            }
+        },
+
+        get: function() {
+            return this.value;
         },
 
         enable: function() {
@@ -429,7 +420,9 @@
         getImage: function(value) {
             return value;
         },
-        change: function(index){},
+        change: function(index){
+            return index;
+        },
         add: function() {},
         onChange: function() {}
     };
