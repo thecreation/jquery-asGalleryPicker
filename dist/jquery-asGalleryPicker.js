@@ -230,20 +230,32 @@
                 }
                 return null;
             },
-            _setImages: function(value) {
-                for (var i = 0, item; i < value.length; i++) {
-                    item = value[i];
-                    this._addImage(item);
+            _updateList: function() {
+                var length = this.$expand.find('.' + this.namespace + '-expand-items').children().length;
+                if (this.count > length) {
+                    for (var i = length; i < this.count; i++) {
+                        this._addImage(this.value[i]).appendTo(this.$expand.find('.' + this.namespace + '-expand-items'));
+                    }
+                } else if (this.count === length && this.count > 0) {
+                    var item = this.value[this.editIndex];
+                    this.$expand.find('.' + this.namespace + '-expand-items').children().eq(this.editIndex).html(this._addImage(item));
+                } else {
+                    this._delImage();
                 }
+                this._updateScrollbar();
             },
 
             _addImage: function(item){
-                $('<li/>', {
+                return $('<li/>', {
                     html:   '<img src="'+ this.options.getImage(item) +'"/>' +
                             '<div class="' + this.namespace + '-item-change">' + this.strings.change +'</div>' +
                             '<a class="' + this.namespace + '-item-remove" href=""></a>',
                     'class':  this.namespace + '-item'
-                }).appendTo(this.$expand.find('.' + this.namespace + '-expand-items'));
+                });
+            },
+
+            _delImage: function() {
+                this.$expand.find('.' + this.namespace + '-expand-items').children().eq(this.indexed).remove();
             },
 
             _updateScrollbar: function() {
@@ -284,58 +296,52 @@
         },
 
         set: function(value, update) {
-            this.update = false;
-            if (update !== false) {
-                this.update = true;
-                this._clearImages();
-
-                if($.isArray(value)){
-                    this.value = value;
-                } else {
-                    this.value = [];
-                }
+            if ($.isArray(value)) {
+                this.value = value;
             } else {
-                if($.isArray(value)){
-                    var newString = value.join(','),
-                        defaultString = this.value ? (this.value.length > 0 ? this.value.join(',') + ',' : '') : '',
-                        lastString = defaultString + newString;
-                    this.value = lastString.split(',');
-                } else {
-                    this.value = [];
-                }
+                this.value = [];
             }
 
             this.count = this.value.length;
             this._setState();
-
-            if (this.count > 0) {
-                this._setImages(value);
-            }
-
-            this._updateScrollbar();
+            this._updateList();
 
             if (update !== false) {
                 this._update();
             }
         },
 
-        change: function(index, value) {
-            this.value[index] = value;
-            this.$expand.find('.' + this.namespace + '-expand-items').children().eq(index).find('img').attr('src', this.options.getImage(value));
-            this._setState();
+        add: function(item, update) {
+            for (var key in item) {
+                this.value.push(item[key]);
+            }
 
-            if (this.update) {
+            this.count = this.value.length;
+            this._setState();
+            this._updateList();
+
+            if(update !== false) {
                 this._update();
             }
         },
 
-        remove: function(index) {
+        change: function(index, value, update) {
+            this.value[index] = value;
+            this.$expand.find('.' + this.namespace + '-expand-items').children().eq(index).find('img').attr('src', this.options.getImage(value));
+            this._setState();
+
+            if(update !== false) {
+                this._update();
+            }
+        },
+
+        remove: function(index, update) {
             this.value.splice(index, 1);
             this.count -= 1;
             this.$expand.find('.' + this.namespace + '-expand-items').children().eq(index).remove();
             this._setState();
 
-            if (this.update) {
+            if(update !== false) {
                 this._update();
             }
         },
@@ -345,6 +351,7 @@
 
             this.count = 0;
             this.value = [];
+            this._setState();
             
             if (update !== false) {
                 this._update();
@@ -474,4 +481,3 @@
         }
     };
 })(jQuery, document, window);
-
