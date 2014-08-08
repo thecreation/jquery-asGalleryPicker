@@ -307,6 +307,7 @@
                 this.value = [];
             }
 
+            this._clearImages();
             this.count = this.value.length;
             this._setState();
             this._updateList();

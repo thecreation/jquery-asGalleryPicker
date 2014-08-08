@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.1 - 2014-08-06
+/*! jQuery plugin - v0.1.1 - 2014-08-08
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -302,6 +302,7 @@
                 this.value = [];
             }
 
+            this._clearImages();
             this.count = this.value.length;
             this._setState();
             this._updateList();
