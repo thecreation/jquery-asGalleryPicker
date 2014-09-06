@@ -1,4 +1,4 @@
-/*! jQuery plugin - v0.1.1 - 2014-09-06
+/*! jQuery asGalleryPicker - v0.1.1 - 2014-09-06
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -190,11 +190,10 @@
 
              _trigger: function(eventType) {
                  var method_arguments = Array.prototype.slice.call(arguments, 1),
-                     data = method_arguments.concat([this]);
+                     data = [this].concat(method_arguments);
 
                  // event
                  this.$element.trigger('asGalleryPicker::' + eventType, data);
-                 this.$element.trigger(eventType + '.asGalleryPicker', data);
 
                  // callback
                  eventType = eventType.replace(/\b\w+\b/g, function(word) {
