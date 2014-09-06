@@ -190,13 +190,8 @@
 
              _trigger: function(eventType) {
                  var method_arguments = Array.prototype.slice.call(arguments, 1),
-                     data;
-                 if (method_arguments) {
-                     data = method_arguments;
-                     data.push(this);
-                 } else {
-                     data = this;
-                 }
+                     data = method_arguments.concat([this]);
+
                  // event
                  this.$element.trigger('asGalleryPicker::' + eventType, data);
                  this.$element.trigger(eventType + '.asGalleryPicker', data);
