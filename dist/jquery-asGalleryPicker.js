@@ -1,4 +1,4 @@
-/*! jQuery asGalleryPicker - v0.1.1 - 2014-09-06
+/*! jQuery asGalleryPicker - v0.1.2 - 2014-10-10
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($, document, window, undefined) {
@@ -36,6 +36,7 @@
              hover: this.namespace + '_hover'
          };
 
+         this.$element.addClass(this.namespace + '-input');
          // flag
          this.disabled = false;
          this.initialed = false;

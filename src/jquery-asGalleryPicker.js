@@ -40,6 +40,7 @@
              hover: this.namespace + '_hover'
          };
 
+         this.$element.addClass(this.namespace + '-input');
          // flag
          this.disabled = false;
          this.initialed = false;
