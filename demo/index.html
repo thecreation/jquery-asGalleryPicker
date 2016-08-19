@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/prism.css">
-        <link rel="stylesheet" href="css/asGalleryPicker.css">
+        <link rel="stylesheet" href="../dist/css/asGalleryPicker.css">
 
         <script src="js/vendor/jquery-1.9.1.min.js"></script>
         <style type="text/css">
@@ -37,7 +37,7 @@
                 <h3>default</h3>
                 <pre class="has-example"><code class="language-markup"></code></pre>
                 <div class="example">
-                    <form action=""> 
+                    <form action="">
                         <input type="text" class="b-asGalleryPicker"  value=''/>
 
                         <input type="text" class="a-asGalleryPicker"  value='images/grass.jpg,images/minv.jpg,images/mh370.jpg,images/sun.jpg'/>
@@ -54,7 +54,7 @@
     <script src="js/vendor/jquery.toc.min.js"></script>
     <script src="js/vendor/prism.js"></script>
     <script src="js/jquery-asScrollbar.js"></script>
-    <script src="../src/jquery-asGalleryPicker.js"></script>
+    <script src="../dist/jquery-asGalleryPicker.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             (function(){
@@ -92,7 +92,7 @@
                 $('.a-asGalleryPicker').asGalleryPicker('clear');
                 return false;
             });
-            
+
             $('#set_val').on('click', function(e) {
                 e.preventDefault();
                 $('.a-asGalleryPicker').asGalleryPicker('val', "images/minv.jpg,images/mh370.jpg");

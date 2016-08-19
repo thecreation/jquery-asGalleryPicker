@@ -2,15 +2,28 @@
   "name": "jquery-asGalleryPicker",
   "version": "0.1.2",
   "main": "dist/jquery-asGalleryPicker.js",
+  "copyright": "amazingSurge",
+  "license": "LGPL-3.0",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
+    "demo",
+    "libs",
+    "package.json",
+    "gulpfile.babel.js",
     "tests"
   ],
+  "homepage": "https://github.com/amazingSurge/jquery-asGalleryPicker",
+  "authors": [
+    "amazingSurge <amazingSurge@gmail.com>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
   "dependencies": {
-    "jquery": ">=1.11.0",
+    "jquery": ">=2.1.1",
     "jquery-asScrollbar": "git@github.com:amazingSurge/jquery-asScrollbar.git"
   }
 }

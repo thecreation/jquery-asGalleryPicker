@@ -1,14 +1,73 @@
- /*
-  * asGalleryPicker
-  * https://github.com/amazingSurge/jquery-asGalleryPicker
-  *
-  * Copyright (c) 2014 amazingSurge
-  * Licensed under the GPL license.
-  */
- import $ from 'jQuery';
- import defaults from './defaults';
+/**
+* jQuery asGalleryPicker
+* a jquery plugin
+* Compiled: Fri Aug 19 2016 09:54:20 GMT+0800 (CST)
+* @version v0.1.2
+* @link https://github.com/amazingSurge/jquery-asGalleryPicker
+* @copyright LGPL-3.0
+*/
+import $ from 'jQuery';
 
- const pluginName = 'asGalleryPicker';
+var defaults = {
+  namespace: '',
+  skin: null,
+  lang: 'en',
+  viewportSize: '330',
+  disabled: false,
+
+  tpl() {
+    'use strict';
+    return '<div class="{{namespace}}">' +
+      '<div class="{{namespace}}-initial">' +
+      '<i></i>{{strings.placeholder}}' +
+      '</div>' +
+      '<div class="{{namespace}}-info">' +
+      '<img class="{{namespace}}-info-image" src="">' +
+      '<span class="{{namespace}}-info-count">{{strings.count}}</span>' +
+      '<div class="{{namespace}}-info-add">{{strings.add}}</div>' +
+      '<div class="{{namespace}}-info-expand">{{strings.expand}}</div>' +
+      '</div>' +
+      '<div class="{{namespace}}-expand">' +
+      '<a class="{{namespace}}-expand-close" href="#"></a>' +
+      '<div class="{{namespace}}-expand-add">' +
+      '<i></i>{{strings.add}}' +
+      '</div>' +
+      '<ul class="{{namespace}}-expand-items">' +
+      '</ul>' +
+      '</div>' +
+      '</div>';
+  },
+
+  process(value) {
+    'use strict';
+    if (value) {
+      return value.join(',');
+    }
+    return '';
+  },
+
+  parse(value) {
+    'use strict';
+    if (typeof value === 'string' && value.length !== 0) {
+      let array = [];
+      array = value.split(",");
+      return array;
+    }
+    return null;
+  },
+  getImage(value) {
+    'use strict';
+    return value;
+  },
+  change(index) {
+    'use strict';
+    return index;
+  },
+  add() {},
+  onChange() {}
+};
+
+const pluginName = 'asGalleryPicker';
  defaults.namespace = pluginName;
 
  class asGalleryPicker {
@@ -427,4 +486,4 @@
    return asGalleryPicker._jQueryInterface;
  };
 
- export default asGalleryPicker;
+export default asGalleryPicker;
