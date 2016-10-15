@@ -165,13 +165,13 @@ api.destory();
 #### get()
 Get the image picked.
 ```javascript
-var icon = $().asIconPicker('get');
+var icon = $().asGalleryPicker('get');
 ```
 
 #### set()
 Set the value.
 ```javascript
-$().asIconPicker('set', 'image.png');
+$().asGalleryPicker('set', 'image.png');
 ```
 
 #### val()
