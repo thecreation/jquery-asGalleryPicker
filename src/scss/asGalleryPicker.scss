@@ -5,8 +5,6 @@
   display: inline-block;
   &-initial, &-info {
     position: relative;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 206px;
     height: 206px;
@@ -56,7 +54,6 @@
       color: #fff;
       text-align: center;
       background-color: #5cafda;
-      -webkit-border-radius: 100%;
       border-radius: 100%;
     }
     &-add {
@@ -114,8 +111,6 @@
   // expand
   &-expand {
     position: relative;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 318px;
     padding: 15px 0;
@@ -141,7 +136,6 @@
       cursor: pointer;
       background-color: #ff7975;
       border: 2px solid #fff;
-      -webkit-border-radius: 100%;
       border-radius: 100%;
 
       speak: none;
@@ -156,8 +150,6 @@
       }
     }
     &-add {
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
       box-sizing: border-box;
       float: left;
       width: 128px;
@@ -197,8 +189,6 @@
       list-style: none;
       li {
         position: relative;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
         box-sizing: border-box;
         float: left;
         width: 128px;
@@ -212,15 +202,11 @@
       position: absolute;
       top: 0;
       right: 0;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
       box-sizing: border-box;
       overflow: hidden;
       line-height: 0;
       background: transparent;
       border: none;
-      -moz-border-radius: 4px;
-      -webkit-border-radius: 4px;
       border-radius: 4px;
     }
     &-scrollbar.asGalleryPicker-expand-vertical {
@@ -237,8 +223,6 @@
       line-height: 0;
       cursor: pointer;
       background: #ccc;
-      -moz-border-radius: 4px;
-      -webkit-border-radius: 4px;
       border-radius: 4px;
     }
   }
@@ -282,8 +266,6 @@
       text-transform: none;
       background-color: #ff7975;
       border: 2px solid #fff;
-      -moz-border-radius: 100%;
-      -webkit-border-radius: 100%;
       border-radius: 100%;
 
       speak: none;

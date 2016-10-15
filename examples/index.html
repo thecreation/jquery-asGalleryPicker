@@ -1,0 +1,94 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>jquery-asGalleryPicker</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="../dist/css/asGalleryPicker.css">
+  <style type="text/css">
+    input {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <!--[if lt IE 8]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  <div id="toc"></div>
+  <div class="container">
+    <div id="toc0"></div>
+    <h1>jQuery.asGalleryPicker</h1>
+    <section>
+      <div id="toc1"></div>
+      <h2>Example</h2>
+      <p>You can pass these options as key/value object to $.asGalleryPicker() method. </p>
+      <section>
+        <div id="toc2"></div>
+        <h3>default</h3>
+        <pre class="has-example"><code class="language-markup"></code></pre>
+        <div class="example">
+          <form action="">
+            <input type="text" class="b-asGalleryPicker" value='' />
+            <input type="text" class="a-asGalleryPicker" value='images/grass.jpg,images/minv.jpg,images/mh370.jpg,images/sun.jpg' />
+            <button id="clear">clear</button>
+            <button id="get_val">get val</button>
+            <button id="set_val">set val</button>
+          </form>
+        </div>
+      </section>
+    </section>
+  </div>
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.toc.js"></script>
+  <script src="js/prism.js"></script>
+  <script src="js/jquery-asScrollbar.js"></script>
+  <script src="../dist/jquery-asGalleryPicker.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      (function() {
+        $('#toc').toc();
+      })();
+      var api = $('.b-asGalleryPicker').asGalleryPicker({
+        add: function() {
+          var value = ["images/dog.jpg"];
+          this.add(value);
+        },
+        change: function(index) {
+          var value = "images/sun.jpg";
+          this.change(index, value);
+        }
+      });
+      $('.a-asGalleryPicker').asGalleryPicker({
+        add: function() {
+          var value = ["images/sun.jpg", "images/minv.jpg", "images/mh370.jpg"];
+          this.add(value);
+        },
+        change: function(index) {
+          var value = "images/sun.jpg";
+          this.change(index, value);
+        }
+      });
+      $('#get_val').on('click', function(e) {
+        e.preventDefault();
+        console.info($('.a-asGalleryPicker').asGalleryPicker('val'));
+        return false;
+      });
+      $('#clear').on('click', function() {
+        $('.a-asGalleryPicker').asGalleryPicker('clear');
+        return false;
+      });
+      $('#set_val').on('click', function(e) {
+        e.preventDefault();
+        $('.a-asGalleryPicker').asGalleryPicker('val', "images/minv.jpg,images/mh370.jpg");
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

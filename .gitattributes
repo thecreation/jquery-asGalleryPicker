@@ -58,4 +58,3 @@ vault.* binary filter=git-crypt diff=git-crypt
 *.bat text eol=crlf
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
-*.ps1 text eol=crlf

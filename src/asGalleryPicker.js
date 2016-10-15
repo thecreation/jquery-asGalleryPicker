@@ -1,68 +1,7 @@
-/**
-* jQuery asGalleryPicker v0.2.0
-* https://github.com/amazingSurge/jquery-asGalleryPicker
-*
-* Copyright (c) amazingSurge
-* Released under the LGPL-3.0 license
-*/
 import $ from 'jquery';
+import DEFAULTS from './defaults';
 
-/* eslint no-empty-function:"off" */
-var DEFAULTS = {
-  namespace: 'asGalleryPicker',
-  skin: null,
-  lang: 'en',
-  viewportSize: '330',
-  disabled: false,
-
-  tpl() {
-    return '<div class="{{namespace}}">' +
-      '<div class="{{namespace}}-initial">' +
-      '<i></i>{{strings.placeholder}}' +
-      '</div>' +
-      '<div class="{{namespace}}-info">' +
-      '<img class="{{namespace}}-info-image" src="">' +
-      '<span class="{{namespace}}-info-count">{{strings.count}}</span>' +
-      '<div class="{{namespace}}-info-add">{{strings.add}}</div>' +
-      '<div class="{{namespace}}-info-expand">{{strings.expand}}</div>' +
-      '</div>' +
-      '<div class="{{namespace}}-expand">' +
-      '<a class="{{namespace}}-expand-close" href="#"></a>' +
-      '<div class="{{namespace}}-expand-add">' +
-      '<i></i>{{strings.add}}' +
-      '</div>' +
-      '<ul class="{{namespace}}-expand-items">' +
-      '</ul>' +
-      '</div>' +
-      '</div>';
-  },
-
-  process(value) {
-    if (value) {
-      return value.join(',');
-    }
-    return '';
-  },
-
-  parse(value) {
-    if (typeof value === 'string' && value.length !== 0) {
-      let array = [];
-      array = value.split(",");
-      return array;
-    }
-    return null;
-  },
-  getImage(value) {
-    return value;
-  },
-  change(index) {
-    return index;
-  },
-  add() {},
-  onChange() {}
-};
-
-const NAMESPACE$1 = 'asGalleryPicker';
+const NAMESPACE = 'asGalleryPicker';
 const STRINGS = {};
 
 /**
@@ -260,7 +199,7 @@ class asGalleryPicker {
     let data = [this].concat(...params);
 
     // event
-    this.$element.trigger(`${NAMESPACE$1}::${eventType}`, data);
+    this.$element.trigger(`${NAMESPACE}::${eventType}`, data);
 
     // callback
     eventType = eventType.replace(/\b\w+\b/g, (word) => {
@@ -431,7 +370,7 @@ class asGalleryPicker {
   }
 
   destory() {
-    this.$element.data(NAMESPACE$1, null);
+    this.$element.data(NAMESPACE, null);
     this.$wrap.remove();
     this._trigger('destory');
   }
@@ -453,47 +392,4 @@ asGalleryPicker.localize('en', {
   change: 'change'
 });
 
-var info = {
-  version:'0.2.0'
-};
-
-const NAMESPACE = 'asGalleryPicker';
-const OtherAsGalleryPicker = $.fn.asGalleryPicker;
-
-const jQueryAsGalleryPicker = function(options, ...args) {
-  if (typeof options === 'string') {
-    const method = options;
-
-    if (/^_/.test(method)) {
-      return false;
-    } else if ((/^(get)/.test(method))) {
-      const instance = this.first().data(NAMESPACE);
-      if (instance && typeof instance[method] === 'function') {
-        return instance[method](...args);
-      }
-    } else {
-      return this.each(function() {
-        const instance = $.data(this, NAMESPACE);
-        if (instance && typeof instance[method] === 'function') {
-          instance[method](...args);
-        }
-      });
-    }
-  }
-
-  return this.each(function() {
-    if (!$(this).data(NAMESPACE)) {
-      $(this).data(NAMESPACE, new asGalleryPicker(this, options));
-    }
-  });
-};
-
-$.fn.asGalleryPicker = jQueryAsGalleryPicker;
-
-$.asGalleryPicker = $.extend({
-  setDefaults: asGalleryPicker.setDefaults,
-  noConflict: function() {
-    $.fn.asGalleryPicker = OtherAsGalleryPicker;
-    return jQueryAsGalleryPicker;
-  }
-}, info);
+export default asGalleryPicker;

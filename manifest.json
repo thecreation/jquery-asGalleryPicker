@@ -1,0 +1,9 @@
+{
+  "dest": "examples",
+  "packages": {
+    "npm:jquery": true,
+    "npm:normalize.css": true,
+    "npm:prismjs": true,
+    "npm:jquery-asScrollbar": true
+  }
+}

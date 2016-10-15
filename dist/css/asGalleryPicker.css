@@ -1,10 +1,9 @@
 /**
-* jQuery asGalleryPicker
-* a jquery plugin
-* Compiled: Fri Aug 19 2016 09:54:20 GMT+0800 (CST)
-* @version v0.1.2
-* @link https://github.com/amazingSurge/jquery-asGalleryPicker
-* @copyright LGPL-3.0
+* jQuery asGalleryPicker v0.2.0
+* https://github.com/amazingSurge/jquery-asGalleryPicker
+*
+* Copyright (c) amazingSurge
+* Released under the LGPL-3.0 license
 */
 @font-face {
   font-family: "asFont";
@@ -203,7 +202,7 @@
 .asGalleryPicker-initial, .asGalleryPicker-info {
   position: relative;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   width: 206px;
   height: 206px;
   text-align: center;
@@ -307,7 +306,7 @@
 .asGalleryPicker-expand {
   position: relative;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   width: 318px;
   padding: 15px 0;
   overflow: hidden;
@@ -347,7 +346,7 @@
 }
 .asGalleryPicker-expand-add {
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   float: left;
   width: 128px;
   height: 128px;
@@ -387,7 +386,7 @@
 .asGalleryPicker-expand-items li {
   position: relative;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   float: left;
   width: 128px;
   height: 128px;
@@ -400,7 +399,7 @@
   top: 0;
   right: 0;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   overflow: hidden;
   line-height: 0;
   background: transparent;

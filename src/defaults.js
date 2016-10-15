@@ -1,12 +1,12 @@
+/* eslint no-empty-function:"off" */
 export default {
-  namespace: '',
+  namespace: 'asGalleryPicker',
   skin: null,
   lang: 'en',
   viewportSize: '330',
   disabled: false,
 
   tpl() {
-    'use strict';
     return '<div class="{{namespace}}">' +
       '<div class="{{namespace}}-initial">' +
       '<i></i>{{strings.placeholder}}' +
@@ -29,7 +29,6 @@ export default {
   },
 
   process(value) {
-    'use strict';
     if (value) {
       return value.join(',');
     }
@@ -37,7 +36,6 @@ export default {
   },
 
   parse(value) {
-    'use strict';
     if (typeof value === 'string' && value.length !== 0) {
       let array = [];
       array = value.split(",");
@@ -46,11 +44,9 @@ export default {
     return null;
   },
   getImage(value) {
-    'use strict';
     return value;
   },
   change(index) {
-    'use strict';
     return index;
   },
   add() {},
