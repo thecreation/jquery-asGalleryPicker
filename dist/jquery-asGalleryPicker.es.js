@@ -1,5 +1,5 @@
 /**
-* jQuery asGalleryPicker v0.2.0
+* jQuery asGalleryPicker v0.2.1
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 *
 * Copyright (c) amazingSurge
@@ -454,7 +454,7 @@ asGalleryPicker.localize('en', {
 });
 
 var info = {
-  version:'0.2.0'
+  version:'0.2.1'
 };
 
 const NAMESPACE = 'asGalleryPicker';
@@ -466,7 +466,7 @@ const jQueryAsGalleryPicker = function(options, ...args) {
 
     if (/^_/.test(method)) {
       return false;
-    } else if ((/^(get)/.test(method))) {
+    } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments.length === 0)) {
       const instance = this.first().data(NAMESPACE);
       if (instance && typeof instance[method] === 'function') {
         return instance[method](...args);
