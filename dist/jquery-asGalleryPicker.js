@@ -1,5 +1,5 @@
 /**
-* jQuery asGalleryPicker v0.2.1
+* jQuery asGalleryPicker v0.2.2
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 *
 * Copyright (c) amazingSurge
@@ -360,13 +360,11 @@
       }, {
         key: '_trigger',
         value: function _trigger(eventType) {
-          var _ref;
-
           for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
             params[_key - 1] = arguments[_key];
           }
 
-          var data = (_ref = [this]).concat.apply(_ref, params);
+          var data = [this].concat(params);
 
           // event
           this.$element.trigger(NAMESPACE$1 + '::' + eventType, data);
@@ -381,16 +379,14 @@
           var onFunction = 'on' + eventType;
 
           if (typeof this.options[onFunction] === 'function') {
-            var _options$onFunction;
-
-            (_options$onFunction = this.options[onFunction]).apply.apply(_options$onFunction, [this].concat(params));
+            this.options[onFunction].apply(this, params);
           }
         }
       }, {
         key: '_update',
         value: function _update() {
           this.$element.val(this.val());
-          this._trigger('change', [this.value]);
+          this._trigger('change', this.value);
         }
       }, {
         key: '_setState',
@@ -451,7 +447,7 @@
         key: '_updateScrollbar',
         value: function _updateScrollbar() {
           if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
-            this.$expand.asScrollbar('destory');
+            this.$expand.asScrollbar('destroy');
           }
           this.$expand.asScrollbar({
             namespace: this.namespace + '-expand'
@@ -568,11 +564,11 @@
           this.$wrap.addClass(this.classes.disabled);
         }
       }, {
-        key: 'destory',
-        value: function destory() {
+        key: 'destroy',
+        value: function destroy() {
           this.$element.data(NAMESPACE$1, null);
           this.$wrap.remove();
-          this._trigger('destory');
+          this._trigger('destroy');
         }
       }], [{
         key: 'setDefaults',
@@ -598,7 +594,7 @@
     });
 
     var info = {
-      version: '0.2.1'
+      version: '0.2.2'
     };
 
     var NAMESPACE = 'asGalleryPicker';
@@ -620,7 +616,7 @@
             return {
               v: false
             };
-          } else if (/^(get)$/.test(method) || method === 'val' && method_arguments.length === 0) {
+          } else if (/^(get)$/.test(method) || method === 'val' && args.length === 0) {
             var instance = _this.first().data(NAMESPACE);
 
             if (instance && typeof instance[method] === 'function') {

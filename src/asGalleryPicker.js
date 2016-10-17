@@ -196,7 +196,7 @@ class asGalleryPicker {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(...params);
+    let data = [this].concat(params);
 
     // event
     this.$element.trigger(`${NAMESPACE}::${eventType}`, data);
@@ -208,13 +208,13 @@ class asGalleryPicker {
     let onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
-      this.options[onFunction].apply(this, ...params);
+      this.options[onFunction].apply(this, params);
     }
   }
 
   _update() {
     this.$element.val(this.val());
-    this._trigger('change', [this.value]);
+    this._trigger('change', this.value);
   }
 
   _setState() {
@@ -264,7 +264,7 @@ class asGalleryPicker {
 
   _updateScrollbar() {
     if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
-      this.$expand.asScrollbar('destory');
+      this.$expand.asScrollbar('destroy');
     }
     this.$expand.asScrollbar({
       namespace: `${this.namespace}-expand`
@@ -369,10 +369,10 @@ class asGalleryPicker {
     this.$wrap.addClass(this.classes.disabled);
   }
 
-  destory() {
+  destroy() {
     this.$element.data(NAMESPACE, null);
     this.$wrap.remove();
-    this._trigger('destory');
+    this._trigger('destroy');
   }
 
   static setDefaults(options) {

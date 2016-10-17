@@ -46,6 +46,11 @@ bower install jquery-asGalleryPicker --save
 npm install jquery-asGalleryPicker --save
 ```
 
+#### Install From Yarn
+```sh
+yarn add jquery-asGalleryPicker
+```
+
 #### Build From Source
 If you want build from source:
 
@@ -155,11 +160,11 @@ You can also save the instances to variable for further use.
 
 ```javascript
 // call directly
-$().asGalleryPicker('destory');
+$().asGalleryPicker('destroy');
 
 // or
 var api = $().data('asGalleryPicker');
-api.destory();
+api.destroy();
 ```
 
 #### get()

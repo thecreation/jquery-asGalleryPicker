@@ -1,5 +1,5 @@
 /**
-* jQuery asGalleryPicker v0.2.1
+* jQuery asGalleryPicker v0.2.2
 * https://github.com/amazingSurge/jquery-asGalleryPicker
 *
 * Copyright (c) amazingSurge
@@ -257,7 +257,7 @@ class asGalleryPicker {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(...params);
+    let data = [this].concat(params);
 
     // event
     this.$element.trigger(`${NAMESPACE$1}::${eventType}`, data);
@@ -269,13 +269,13 @@ class asGalleryPicker {
     let onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
-      this.options[onFunction].apply(this, ...params);
+      this.options[onFunction].apply(this, params);
     }
   }
 
   _update() {
     this.$element.val(this.val());
-    this._trigger('change', [this.value]);
+    this._trigger('change', this.value);
   }
 
   _setState() {
@@ -325,7 +325,7 @@ class asGalleryPicker {
 
   _updateScrollbar() {
     if (typeof this.$expand.data('asScrollbar') !== 'undefined') {
-      this.$expand.asScrollbar('destory');
+      this.$expand.asScrollbar('destroy');
     }
     this.$expand.asScrollbar({
       namespace: `${this.namespace}-expand`
@@ -430,10 +430,10 @@ class asGalleryPicker {
     this.$wrap.addClass(this.classes.disabled);
   }
 
-  destory() {
+  destroy() {
     this.$element.data(NAMESPACE$1, null);
     this.$wrap.remove();
-    this._trigger('destory');
+    this._trigger('destroy');
   }
 
   static setDefaults(options) {
@@ -454,7 +454,7 @@ asGalleryPicker.localize('en', {
 });
 
 var info = {
-  version:'0.2.1'
+  version:'0.2.2'
 };
 
 const NAMESPACE = 'asGalleryPicker';
@@ -466,7 +466,7 @@ const jQueryAsGalleryPicker = function(options, ...args) {
 
     if (/^_/.test(method)) {
       return false;
-    } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments.length === 0)) {
+    } else if ((/^(get)$/.test(method)) || (method === 'val' && args.length === 0)) {
       const instance = this.first().data(NAMESPACE);
       if (instance && typeof instance[method] === 'function') {
         return instance[method](...args);
